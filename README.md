@@ -53,19 +53,23 @@ cargo run
 #### Game Mode Selection
 - `1` - Player vs Player
 - `2` - Player vs CPU (leads to difficulty selection)
-- `q` - Quit game
+- `Ctrl+Q` - Quit game
 
 #### CPU Difficulty Selection
 - `1` - Easy (Random moves)
 - `2` - Medium (Greedy strategy)
 - `3` - Hard (Minimax algorithm)
 - `b` - Back to game mode selection
-- `q` - Quit game
+- `Ctrl+Q` - Quit game
 
 #### In-Game Controls
 - `↑↓←→` - Move cursor
 - `Enter` or `Space` - Place disc
-- `q` - Quit to main menu
+- `Ctrl+Q` - Quit to main menu
+
+### Screenshots
+
+![Othello Game Screenshot](./screenshots/screenshot.png)
 
 ### Game Display
 
@@ -166,19 +170,23 @@ cargo run
 #### ゲームモード選択
 - `1` - 対人戦
 - `2` - 対CPU戦（難易度選択へ）
-- `q` - ゲーム終了
+- `Ctrl+Q` - ゲーム終了
 
 #### CPU難易度選択
 - `1` - Easy（ランダム手）
 - `2` - Medium（グリーディー戦略）
 - `3` - Hard（ミニマックス法）
 - `b` - ゲームモード選択に戻る
-- `q` - ゲーム終了
+- `Ctrl+Q` - ゲーム終了
 
 #### ゲーム中の操作
 - `↑↓←→` - カーソル移動
 - `Enter` または `Space` - ディスク配置
-- `q` - メインメニューに戻る
+- `Ctrl+Q` - メインメニューに戻る
+
+### スクリーンショット
+
+![オセロゲームのスクリーンショット](./screenshots/screenshot.png)
 
 ### ゲーム表示
 
