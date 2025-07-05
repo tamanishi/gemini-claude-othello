@@ -129,3 +129,67 @@ impl Game {
         (black_count, white_count)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_game_new() {
+        let game = Game::new();
+        assert_eq!(game.current_turn(), Disc::Black);
+        assert_eq!(game.board().get_disc(3, 3), Some(Disc::White));
+        assert_eq!(game.board().get_disc(3, 4), Some(Disc::Black));
+        assert_eq!(game.board().get_disc(4, 3), Some(Disc::Black));
+        assert_eq!(game.board().get_disc(4, 4), Some(Disc::White));
+    }
+
+    #[test]
+    fn test_is_valid_move() {
+        let game = Game::new();
+        assert!(game.is_valid_move(2, 3, Disc::Black));
+        assert!(game.is_valid_move(3, 2, Disc::Black));
+        assert!(game.is_valid_move(4, 5, Disc::Black));
+        assert!(game.is_valid_move(5, 4, Disc::Black));
+        assert!(!game.is_valid_move(3, 3, Disc::Black));
+        assert!(!game.is_valid_move(0, 0, Disc::Black));
+    }
+
+    #[test]
+    fn test_get_valid_moves() {
+        let game = Game::new();
+        let valid_moves = game.get_valid_moves(Disc::Black);
+        assert_eq!(valid_moves.len(), 4);
+        assert!(valid_moves.contains(&(2, 3)));
+        assert!(valid_moves.contains(&(3, 2)));
+        assert!(valid_moves.contains(&(4, 5)));
+        assert!(valid_moves.contains(&(5, 4)));
+    }
+
+    #[test]
+    fn test_make_move() {
+        let mut game = Game::new();
+        let initial_turn = game.current_turn();
+        
+        assert!(game.make_move(2, 3, Disc::Black));
+        assert_eq!(game.board().get_disc(2, 3), Some(Disc::Black));
+        assert_eq!(game.board().get_disc(3, 3), Some(Disc::Black));
+        assert_ne!(game.current_turn(), initial_turn);
+        
+        assert!(!game.make_move(0, 0, Disc::White));
+    }
+
+    #[test]
+    fn test_count_discs() {
+        let game = Game::new();
+        let (black_count, white_count) = game.count_discs();
+        assert_eq!(black_count, 2);
+        assert_eq!(white_count, 2);
+    }
+
+    #[test]
+    fn test_is_game_over() {
+        let game = Game::new();
+        assert!(!game.is_game_over());
+    }
+}

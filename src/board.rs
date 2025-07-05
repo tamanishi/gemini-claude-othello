@@ -48,3 +48,43 @@ impl Board {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_board_new() {
+        let board = Board::new();
+        assert_eq!(board.get_disc(3, 3), Some(Disc::White));
+        assert_eq!(board.get_disc(3, 4), Some(Disc::Black));
+        assert_eq!(board.get_disc(4, 3), Some(Disc::Black));
+        assert_eq!(board.get_disc(4, 4), Some(Disc::White));
+        assert_eq!(board.get_disc(0, 0), Some(Disc::Empty));
+    }
+
+    #[test]
+    fn test_get_disc() {
+        let board = Board::new();
+        assert_eq!(board.get_disc(0, 0), Some(Disc::Empty));
+        assert_eq!(board.get_disc(8, 8), None);
+        assert_eq!(board.get_disc(7, 7), Some(Disc::Empty));
+    }
+
+    #[test]
+    fn test_put_disc() {
+        let mut board = Board::new();
+        board.put_disc(0, 0, Disc::Black);
+        assert_eq!(board.get_disc(0, 0), Some(Disc::Black));
+        
+        board.put_disc(8, 8, Disc::Black);
+        assert_eq!(board.get_disc(8, 8), None);
+    }
+
+    #[test]
+    fn test_disc_display() {
+        assert_eq!(format!("{}", Disc::Black), "●");
+        assert_eq!(format!("{}", Disc::White), "●");
+        assert_eq!(format!("{}", Disc::Empty), ".");
+    }
+}

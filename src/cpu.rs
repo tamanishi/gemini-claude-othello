@@ -152,4 +152,58 @@ fn get_opponent(player: Disc) -> Disc {
     if player == Disc::Black { Disc::White } else { Disc::Black }
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
 
+    #[test]
+    fn test_get_opponent() {
+        assert_eq!(get_opponent(Disc::Black), Disc::White);
+        assert_eq!(get_opponent(Disc::White), Disc::Black);
+    }
+
+    #[test]
+    fn test_get_random_move() {
+        let valid_moves = vec![(0, 0), (1, 1), (2, 2)];
+        let result = get_random_move(&valid_moves);
+        assert!(valid_moves.contains(&result));
+    }
+
+    #[test]
+    fn test_get_best_move_easy() {
+        let game = crate::game::Game::new();
+        let result = get_best_move(&game, Disc::Black, CpuLevel::Easy);
+        let valid_moves = game.get_valid_moves(Disc::Black);
+        assert!(valid_moves.contains(&result));
+    }
+
+    #[test]
+    fn test_get_best_move_medium() {
+        let game = crate::game::Game::new();
+        let result = get_best_move(&game, Disc::Black, CpuLevel::Medium);
+        let valid_moves = game.get_valid_moves(Disc::Black);
+        assert!(valid_moves.contains(&result));
+    }
+
+    #[test]
+    fn test_get_best_move_hard() {
+        let game = crate::game::Game::new();
+        let result = get_best_move(&game, Disc::Black, CpuLevel::Hard);
+        let valid_moves = game.get_valid_moves(Disc::Black);
+        assert!(valid_moves.contains(&result));
+    }
+
+    #[test]
+    fn test_evaluate_board() {
+        let game = crate::game::Game::new();
+        let score = evaluate_board(&game, Disc::Black);
+        assert!(score >= i32::MIN && score <= i32::MAX);
+    }
+
+    #[test]
+    fn test_calculate_positional_score() {
+        let game = crate::game::Game::new();
+        let score = calculate_positional_score(&game, Disc::Black);
+        assert!(score >= i32::MIN && score <= i32::MAX);
+    }
+}

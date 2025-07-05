@@ -40,3 +40,38 @@ impl Player {
 
     
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_player_new() {
+        let player = Player::new(PlayerType::Human, Disc::Black);
+        match player.player_type() {
+            PlayerType::Human => assert!(true),
+            _ => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_cpu_player() {
+        let player = Player::new(PlayerType::Cpu(CpuLevel::Easy), Disc::White);
+        match player.player_type() {
+            PlayerType::Cpu(CpuLevel::Easy) => assert!(true),
+            _ => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_cpu_level_debug() {
+        let easy = CpuLevel::Easy;
+        assert_eq!(format!("{:?}", easy), "Easy");
+        
+        let medium = CpuLevel::Medium;
+        assert_eq!(format!("{:?}", medium), "Medium");
+        
+        let hard = CpuLevel::Hard;
+        assert_eq!(format!("{:?}", hard), "Hard");
+    }
+}
