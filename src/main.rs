@@ -6,7 +6,7 @@ mod player;
 use board::{Board, Disc};
 use crossterm::{
     cursor::{Hide, MoveTo, Show},
-    event::{self, Event, KeyCode},
+    event::{self, Event, KeyCode, KeyModifiers},
     execute,
     style::{Color, Print, ResetColor, SetBackgroundColor, SetForegroundColor},
     terminal::{self, Clear, ClearType, EnterAlternateScreen, LeaveAlternateScreen},
@@ -44,9 +44,11 @@ fn select_game_mode(stdout: &mut Stdout) -> std::io::Result<PlayerType> {
                 KeyCode::Char('1') => return Ok(PlayerType::Human),
                 KeyCode::Char('2') => return Ok(select_cpu_level(stdout)?),
                 KeyCode::Char('q') => {
-                    terminal::disable_raw_mode()?;
-                    execute!(stdout, Show, LeaveAlternateScreen)?;
-                    std::process::exit(0);
+                    if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                        terminal::disable_raw_mode()?;
+                        execute!(stdout, Show, LeaveAlternateScreen)?;
+                        std::process::exit(0);
+                    }
                 }
                 _ => {}
             }
@@ -64,9 +66,11 @@ fn select_cpu_level(stdout: &mut Stdout) -> std::io::Result<PlayerType> {
                 KeyCode::Char('3') => return Ok(PlayerType::Cpu(CpuLevel::Hard)),
                 KeyCode::Char('b') => return select_game_mode(stdout),
                 KeyCode::Char('q') => {
-                    terminal::disable_raw_mode()?;
-                    execute!(stdout, Show, LeaveAlternateScreen)?;
-                    std::process::exit(0);
+                    if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                        terminal::disable_raw_mode()?;
+                        execute!(stdout, Show, LeaveAlternateScreen)?;
+                        std::process::exit(0);
+                    }
                 }
                 _ => {}
             }
@@ -146,7 +150,11 @@ fn get_human_input(
                         return Ok(Some((cursor_pos.0 as usize, cursor_pos.1 as usize)));
                     }
                 }
-                KeyCode::Char('q') => return Ok(None),
+                KeyCode::Char('q') => {
+                    if key_event.modifiers.contains(KeyModifiers::CONTROL) {
+                        return Ok(None);
+                    }
+                }
                 _ => {}
             }
             draw_board(stdout, game.board(), *cursor_pos)?;
@@ -191,7 +199,7 @@ fn draw_info(stdout: &mut Stdout, game: &Game) -> std::io::Result<()> {
     let current_turn_symbol = if game.current_turn() == Disc::Black { "◯" } else { "●" };
     let turn_color = if game.current_turn() == Disc::Black { Color::White } else { Color::White };
     
-    let help_text = "Use arrow keys to move, Enter/Space to place, 'q' to quit.";
+    let help_text = "Use arrow keys to move, Enter/Space to place, 'Ctrl+Q' to quit.";
 
     execute!(
         stdout,
@@ -227,7 +235,7 @@ fn draw_game_mode_selection(stdout: &mut Stdout, error: &str) -> std::io::Result
         MoveTo(2, 4),
         Print("2. Player vs. CPU"),
         MoveTo(0, 6),
-        Print("Press 'q' to quit."),
+        Print("Press 'Ctrl+Q' to quit."),
         MoveTo(0, 8),
         SetForegroundColor(Color::Red),
         Print(error),
@@ -248,7 +256,7 @@ fn draw_cpu_level_selection(stdout: &mut Stdout, error: &str) -> std::io::Result
         MoveTo(0, 4),
         Print("3. Hard - Minimax algorithm"),
         MoveTo(0, 6),
-        Print("Press 'b' to go back, 'q' to quit."),
+        Print("Press 'b' to go back, 'Ctrl+Q' to quit."),
         MoveTo(0, 8),
         SetForegroundColor(Color::Red),
         Print(error),
@@ -289,12 +297,12 @@ fn draw_game_over(stdout: &mut Stdout, game: &Game) -> std::io::Result<()> {
     execute!(
         stdout,
         MoveTo(0, 16),
-        Print("Press 'q' to exit.")
+        Print("Press 'Ctrl+Q' to exit.")
     )?;
 
     loop {
         if let Event::Key(key_event) = event::read()? {
-            if key_event.code == KeyCode::Char('q') {
+            if key_event.code == KeyCode::Char('q') && key_event.modifiers.contains(KeyModifiers::CONTROL) {
                 break;
             }
         }
